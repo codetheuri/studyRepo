@@ -1,0 +1,155 @@
+<?php
+
+namespace app\controllers;
+
+use Yii;
+use yii\filters\AccessControl;
+use yii\web\Controller;
+use yii\web\Response;
+use yii\filters\VerbFilter;
+// use app\models\LoginForm;
+use app\models\ContactForm;
+use app\modules\studyRepo\models\LoginForm;
+use app\modules\studyRepo\models\PaperSearch;
+use app\modules\studyRepo\models\paper;
+use yii\web\NotFoundHttpException;
+
+class SiteController extends Controller
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout','indexpaper','about','contact',], // Apply the filter only to the 'download' action
+                'rules' => [
+                    [
+                        'actions' => ['logout','indexpaper','about','contact',],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        ];
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
+    public function actionIndex()
+    {  
+        // $heading1 = "Welcome to Past Papers Site"; // Replace with your logic to fetch the actual heading
+
+        return $this->render('index', [
+            // 'heading1' => $heading1,
+        ]);
+    }
+
+    /**
+     * Login action.
+     *
+     * @return Response|string
+     */
+    public function actionLogin()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->goBack();
+        }
+
+        $model->password = '';
+        return $this->redirect(['studyRepo/user/login']);
+            
+     
+    }
+
+    /**
+     * Logout action.
+     *
+     * @return Response
+     */
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
+    }
+
+    /**
+     * Displays contact page.
+     *
+     * @return Response|string
+     */
+    public function actionContact()
+    {
+        $model = new ContactForm();
+        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+            Yii::$app->session->setFlash('contactFormSubmitted');
+
+            return $this->refresh();
+        }
+        return $this->render('contact', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Displays about page.
+     *
+     * @return string
+     */
+    public function actionIndexpaper()
+    {
+        $searchModel = new PaperSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('paper', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+
+
+    public function actionAbout()
+    {
+        return $this->render('about');
+    }
+
+    public function actionHome()
+    {
+        return $this->render('home');
+    }
+}
