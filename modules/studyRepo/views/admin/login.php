@@ -24,28 +24,27 @@ use kartik\password\PasswordInput;
 
                     <?= $form->field($model, 'password')->widget(PasswordInput::class, [
                         'pluginOptions' => [
-                           'showMeter' => false, 
+                            'showMeter' => false,
                             'toggleMask' => true,
                         ],
-                        'class' => 'form-control rounded-pill',
-                    ]) ?> 
+                    ])->textInput(['class' => 'form-control rounded-pill']) ?>
 
                     <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
 
                     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                        <a class="small text-decoration-none"><?= Html::a('Forgot password', ['user/request-password-reset']) ?>.</a>
-                        <a class="small text-decoration-none"><?= Html::a('Need new verification Email? Resend', ['user/resend-verification-email']) ?></a>
+                       <?= Html::a('Forgot password', ['user/request-password-reset'],['class'=>'text-decoration-none']) ?>
+                      <?= Html::a('Need new verification Email? Resend', ['user/resend-verification-email'],['class'=>'text-decoration-none']) ?>
                     </div>
 
-                    <div class="form-group mt-3">
+                    <div class="form-group mt-3 ">
                         <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block rounded-pill', 'name' => 'login-button']) ?>
                     </div>
 
-                    </div>
-                  
-                    <?php ActiveForm::end(); ?>
                 </div>
+
+                <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>
+</div>
 </div>
