@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use kartik\password\PasswordInput;
 
 /** @var yii\web\View $this */
 /** @var app\modules\studyRepo\models\LoginForm $model */
@@ -21,7 +22,13 @@ use yii\helpers\Url;
 
                     <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'class' => 'form-control rounded-pill']) ?>
 
-                    <?= $form->field($model, 'password')->passwordInput(['class' => 'form-control rounded-pill']) ?>
+                    <?= $form->field($model, 'password')->widget(PasswordInput::class, [
+                        'pluginOptions' => [
+                           'showMeter' => false, 
+                            'toggleMask' => true,
+                        ],
+                        'class' => 'form-control rounded-pill',
+                    ]) ?> 
 
                     <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
 

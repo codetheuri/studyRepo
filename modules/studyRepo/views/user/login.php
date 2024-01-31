@@ -26,7 +26,7 @@ use kartik\password\PasswordInput;
                            'showMeter' => false, 
                             'toggleMask' => true,
                         ],
-                        'class' =>[ 'form-control rounded-pill'],
+                        'class' => 'form-control rounded-pill',
                     ]) ?> 
 
                     <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
