@@ -46,6 +46,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 ['label' => 'past papers', 'url' => ['/site/indexpaper']],
 
                 ['label' => 'StudyRepo', 'url' => ['/studyRepo/admin/index']],
+                ['label' => 'about', 'url' => ['/site/about']],
                 ['label' => 'contact', 'url' => ['site/contact']],
                 Yii::$app->user->isGuest
                     ? ['label' => 'Login', 'url' => ['/studyRepo/user/login']] +

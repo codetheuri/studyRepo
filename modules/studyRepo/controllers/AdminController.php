@@ -21,7 +21,7 @@ class AdminController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout','signup','login','delete-user'],
+                'only' => ['logout','signup','login','delete-user','users','about','index'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -32,6 +32,14 @@ class AdminController extends \yii\web\Controller
                         'actions' => ['login','error'   ],
                         'allow' => true,
                         
+                    ],
+                    [
+                        'actions' => ['index',],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isUserAdmin(Yii::$app->user->identity->username);
+                        }
                     ],
                     [
                         'actions' => ['logout','users','delete-user'],
@@ -69,6 +77,10 @@ class AdminController extends \yii\web\Controller
 
         return $this->redirect(['paper/index']);
     }
+    public function actionAddUser(){
+
+
+    }
     public function actionUsers()
     {
         $users = User::find()->all();
@@ -86,6 +98,17 @@ public function actionDeleteUser($id)
     $user->delete();
 
     return $this->redirect(['users']);
+}
+public function actionUpdateUser($id){
+    $model = user::findOne($id);
+
+    if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        return $this->redirect(['users', 'id' => $model->id]);
+    }
+
+    return $this->render('updateUsers', [
+        'model' => $model,
+    ]);
 }
 
 public function actionLogin()

@@ -24,9 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'username',
             'email',
             'status',
+            'role',
                     [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => ' {delete}',
+                'template' => ' {delete}{update}',
                 'buttons' => [
                          'delete' => function ($url, $model, $key) {
                         return Html::a('Delete', ['delete-user', 'id' => $model->id], [
@@ -37,7 +38,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ]);
                     },
+                    'update' => function ($url, $model, $key) {
+                        return Html::a('update', ['update-user', 'id' => $model->id], [
+                            'class' => 'btn btn-secondary',
+                           
+                        ]);
+                    },
                 ],
+
             ],
         ],
     ]); ?>

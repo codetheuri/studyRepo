@@ -13,7 +13,6 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\web\Session;
 use yii\web\BadRequestHttpException;
 use yii\base\InvalidArgumentException;
 
@@ -72,8 +71,12 @@ class UserController extends Controller
         $this->layout = 'login_layout';
         $model = new LoginForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ($model->load(Yii::$app->request->post()) && $model->loginAdmin()) {
+            return $this->redirect(['admin/index']);
+        } 
+        else if($model->load(Yii::$app->request->post()) && $model->login()){
+           
+            return $this->redirect(['site/index']);
         }
 
         else {
@@ -91,8 +94,7 @@ class UserController extends Controller
         $this->layout = 'login_layout';
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            $session = new Session;
-             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+                     Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
             return $this->goHome();
         }
       

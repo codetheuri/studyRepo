@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 use app\modules\studyRepo\models\Paper;
+use app\modules\studyRepo\models\User;
 use app\modules\studyRepo\models\PaperSearch;
 use yii\behaviors\TimestampBehavior;
 
@@ -27,7 +28,7 @@ class PaperController extends Controller
          return [
              'access' => [
                  'class' => AccessControl::class,
-                 'only' => ['download','create'], // Apply the filter only to the 'download' action
+                 'only' => ['download','create','index', 'create','update','delete','view'], // Apply the filter only to the 'download' action
                  'rules' => [
                      [
                          'actions' => ['download','create',],
@@ -37,6 +38,14 @@ class PaperController extends Controller
                         //     return $this->redirect(Url::to(['/studyRepo/admin/login']));
                         //  }// Allow only authenticated users
                      ],
+                     [
+                        'actions' => ['index','update','delete','view','create'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return User::isUserAdmin(Yii::$app->user->identity->username);
+                        }
+                    ],
                  ],
              ],
          ];

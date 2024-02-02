@@ -21,13 +21,16 @@ use yii\web\IdentityInterface;
  * @property integer $updated_at
  * @property string $password write-only password
  */
+
 class User extends ActiveRecord implements IdentityInterface
 {
-    
+
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-  
+    const ROLE_USER = 10;
+    const ROLE_ADMIN = 20;
+
     public static function tableName()
     {
         return '{{%user}}';
@@ -46,12 +49,23 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-        //     [['password', 'password_repeat'], 'required', 'on' => 'register'], // Add validation for password_repeat
-        //     [['password', 'password_repeat'], 'string', 'min' => 6, 'on' => 'register'], // Adjust length as needed
-        //     ['password_repeat', 'compare', 'compareAttribute' => 'password', 'on' => 'register'], 
-        ];// Ensure password_repeat matches password
+            ['role', 'default', 'value' => 10],
+            ['role', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
+            //     [['password', 'password_repeat'], 'required', 'on' => 'register'], // Add validation for password_repeat
+            //     [['password', 'password_repeat'], 'string', 'min' => 6, 'on' => 'register'], // Adjust length as needed
+            //     ['password_repeat', 'compare', 'compareAttribute' => 'password', 'on' => 'register'], 
+        ]; // Ensure password_repeat matches password
     }
-    
+
+    public function attributeLabels()
+    {
+        return [
+            'STATUS_DELETED' => 'STATUS_DELETED',
+            'STATUS_INACTIVE' => 'STATUS_INACTIVE',
+            ' STATUS_ACTIVE' => ' STATUS_ACTIVE',
+        ];
+    }
+
 
     public static function findIdentity($id)
     {
@@ -125,7 +139,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
-    
+
     public function generateAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();
@@ -144,5 +158,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public static function isUserAdmin($username)
+    {
+        if (static::findOne(['username' => $username, 'role' => self::ROLE_ADMIN])) {
+
+            return true;
+        } else {
+
+            return false;
+        }
     }
 }

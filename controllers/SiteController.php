@@ -12,6 +12,7 @@ use app\models\ContactForm;
 use app\modules\studyRepo\models\LoginForm;
 use app\modules\studyRepo\models\PaperSearch;
 use app\modules\studyRepo\models\paper;
+use app\modules\studyRepo\models\User;
 use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
@@ -24,13 +25,21 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout','indexpaper','about','contact',], // Apply the filter only to the 'download' action
+                'only' => ['logout','indexpaper','about','contact','index',], // Apply the filter only to the 'download' action
                 'rules' => [
                     [
-                        'actions' => ['logout','indexpaper','about','contact',],
+                        'actions' => ['logout','indexpaper','contact','about','index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    // [
+                    //     'actions' => [],
+                    //     'allow' => true,
+                    //     'roles' => ['@'],
+                    //     'matchCallback' => function ($rule, $action) {
+                    //         return User::isUserAdmin(Yii::$app->user->identity->username);
+                    //     }
+                    // ],
                 ],
             ],
             'verbs' => [
