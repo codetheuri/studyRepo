@@ -72,11 +72,12 @@ class UserController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->loginAdmin()) {
+            Yii::$app->user->identity = $model->getUser();
             return $this->redirect(['admin/index']);
         } 
         else if($model->load(Yii::$app->request->post()) && $model->login()){
-           
-            return $this->redirect(['site/index']);
+            Yii::$app->user->identity = $model->getUser();
+            return $this->goHome();
         }
 
         else {

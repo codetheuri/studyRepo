@@ -28,7 +28,13 @@ class SiteController extends Controller
                 'only' => ['logout','indexpaper','about','contact','index',], // Apply the filter only to the 'download' action
                 'rules' => [
                     [
-                        'actions' => ['logout','indexpaper','contact','about','index'],
+                        'actions' => ['index'],
+                        'allow' => true,
+                        
+                    ],
+
+                    [
+                        'actions' => ['logout','indexpaper','contact','about',],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

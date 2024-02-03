@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 /** @var string $content */
 
+use app\modules\studyRepo\models\User;
 use app\widgets\Alert;
 use yii\bootstrap5\Nav;
 use app\assets\AppAsset;
@@ -33,38 +34,52 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <?php $this->beginBody() ?>
 
     <header id="header">
-        <?php
-        NavBar::begin([
-            'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->homeUrl,
-            'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
-        ]);
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav ms-auto'],
-            'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'past papers', 'url' => ['/site/indexpaper']],
+    <?php
+    NavBar::begin([
+        'brandLabel' => Yii::$app->name,
+        'brandUrl' => Yii::$app->homeUrl,
+        'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
+    ]);
 
-                ['label' => 'StudyRepo', 'url' => ['/studyRepo/admin/index']],
-                ['label' => 'about', 'url' => ['/site/about']],
-                ['label' => 'contact', 'url' => ['site/contact']],
-                Yii::$app->user->isGuest
-                    ? ['label' => 'Login', 'url' => ['/studyRepo/user/login']] +
-                     ['label' => 'Register', 'url' => ['/studyRepo/user/register']]
-                    : '<li class="nav-item">'
-                    . Html::beginForm(['/studyRepo/user/logout'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-            ]
-        ]);
-        
-        NavBar::end();
-        ?>
-    </header>
+    $menuItems = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'past papers', 'url' => ['/site/indexpaper']],
+        ['label' => 'about', 'url' => ['/site/about']],
+        ['label' => 'contact', 'url' => ['site/contact']],
+    ];
+
+    if (Yii::$app->user->isGuest) {
+        $menuItems[] = ['label' => 'Login', 'url' => ['/studyRepo/user/login']];
+        $menuItems[] = ['label' => 'Register', 'url' => ['/studyRepo/user/register']];
+  
+     } else {
+        $menuItems[] = '<li class="nav-item">'
+            . Html::beginForm(['/studyRepo/user/logout'])
+            . Html::submitButton(
+                'Logout (' . Yii::$app->user->identity->username . ')',
+                ['class' => 'nav-link btn btn-link logout']
+            )
+            . Html::endForm()
+            . '</li>';
+
+            if(User::isUserAdmin(Yii::$app->user->identity->username)) {
+                $menuItems[] = ['label' => 'Admin', 'url' => ['/studyRepo/admin/index']];}
+    }
+
+    // Conditionally include Admin link
+    // if (User::isUserAdmin(Yii::$app->user->identity->username)) {
+    //     $menuItems[] = ['label' => 'Admin', 'url' => ['/studyRepo/admin/index']];
+    // }
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto'],
+        'items' => $menuItems,
+    ]);
+
+    NavBar::end();
+    ?>
+</header>
+
 
     <main id="main" class="flex-shrink-0" role="main">
         <div class="container">
