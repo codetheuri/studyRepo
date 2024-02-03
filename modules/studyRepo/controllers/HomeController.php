@@ -1,13 +1,15 @@
 <?php
 
 namespace app\modules\studyRepo\controllers;
-
+use yii;
 use app\modules\studyRepo\models\Home;
+use app\modules\studyRepo\models\User;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
 
 /**
  * HomeController implements the CRUD actions for Home model.
@@ -18,18 +20,26 @@ class HomeController extends Controller
      * @inheritDoc
      */
     public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+    {    return [
+        'access' => [
+            'class' => AccessControl::class,
+            'only' => ['index','view','create','update','delete'],
+            'rules' => [
+            
+
+                [
+                    'actions' => ['index','view','create','update','delete'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                    'matchCallback' => function ($rule, $action) {
+                        return User::isUserAdmin(Yii::$app->user->identity->username);
+                    }
                 ],
-            ]
-        );
+              
+            ],
+        ],
+       
+    ];
     }
 
     /**
@@ -165,18 +175,5 @@ class HomeController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    public function actionUpload()
-    {
-        $model = new Home();
-
-        if (\Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                return;
-            }
-        }
-
-        return $this->render('upload', ['model' => $model]);
-    }
+   
 }

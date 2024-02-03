@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\app\modules\studyRepo\models\Status;
 
 /* User model
 * @property integer $id
@@ -49,7 +50,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-            ['role', 'default', 'value' => 10],
+            ['role', 'default', 'value' => self::ROLE_USER],
             ['role', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
             //     [['password', 'password_repeat'], 'required', 'on' => 'register'], // Add validation for password_repeat
             //     [['password', 'password_repeat'], 'string', 'min' => 6, 'on' => 'register'], // Adjust length as needed
@@ -60,9 +61,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'STATUS_DELETED' => 'STATUS_DELETED',
-            'STATUS_INACTIVE' => 'STATUS_INACTIVE',
-            ' STATUS_ACTIVE' => ' STATUS_ACTIVE',
+            0 => 'STATUS_DELETED',
+            9 => 'STATUS_INACTIVE',
+           10 => ' STATUS_ACTIVE',
         ];
     }
 

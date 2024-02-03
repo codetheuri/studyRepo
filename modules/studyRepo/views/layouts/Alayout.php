@@ -99,7 +99,7 @@ AdminAsset::register($this);
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="<?=url::to(['/studyRepo/admin/users']) ?>">view Accounts</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Add User</a>
+                                <a class="nav-link" href="<?=url::to(['/studyRepo/admin/register']); ?>">Add User</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
@@ -128,7 +128,7 @@ AdminAsset::register($this);
                            
                             Edit home page
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<?=url::to(['/studyRepo/admin/register']); ?>">
                             <div class="sb-nav-link-icon"><i class="fas fa-user fa-fw"></i></div>
                             Add admin
                         </a>

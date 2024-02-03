@@ -21,7 +21,7 @@ class AdminController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout','signup','login','delete-user','users','about','index'],
+                'only' => ['logout','signup','login','delete-user','users','about','index','update-user'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -34,7 +34,7 @@ class AdminController extends \yii\web\Controller
                         
                     ],
                     [
-                        'actions' => ['index',],
+                        'actions' => ['index','users','update-user','delete-user'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -42,7 +42,7 @@ class AdminController extends \yii\web\Controller
                         }
                     ],
                     [
-                        'actions' => ['logout','users','delete-user'],
+                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                         'denyCallback' => function () {
@@ -77,10 +77,18 @@ class AdminController extends \yii\web\Controller
 
         return $this->redirect(['paper/index']);
     }
-    public function actionAddUser(){
-
-
+    public function actionRegister()
+    {
+        
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+                     Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            return $this->goHome();
+        }
+      
+        return $this->render('@app/modules/studyRepo/views/user/register', ['model' => $model]);
     }
+
     public function actionUsers()
     {
         $users = User::find()->all();
